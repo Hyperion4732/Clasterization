@@ -26,9 +26,7 @@ class k_means:
 			suitable_center = -1
 			for j in range(k):
 				distance = 0
-				for q in range(dim):
-					distance += (data[i][q] - center[j][q])**2
-				distance = distance**(1/2)
+				distance += np.linalg.norm(np.array(data[i]) - np.array(center[j]))
 				if distance < min_distance:
 					min_distance = distance
 					suitable_center = j
@@ -40,8 +38,8 @@ class k_means:
 	@staticmethod
 	def center_update(center, label, dim):
 		k = len(center)
-		for i in range(k): #по i кластерам
-			for q in range(dim): #по q параметрам
+		for i in range(k): # по i кластерам
+			for q in range(dim): # по q параметрам
 				updated_parameter = 0
 				for j in range(len(label[i])):
 					updated_parameter += center[i][q] - label[i][j][q]
@@ -70,11 +68,11 @@ class k_means:
 			center = k_means.center_update(center, label, dim)
 			label = k_means.data_clusterization(data, center, k)
 			if center == privious_center:
-				#label = list(filter(None, label))
-				#print(center)
+				# label = list(filter(None, label))
+				# print(center)
 				break
 			privious_center = copy.deepcopy(center)
 			count += 1
-		#print(list(filter(None, label)))
-		#print(label)
+		# print(list(filter(None, label)))
+		# print(label)
 		return label

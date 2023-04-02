@@ -2,14 +2,30 @@ from k_means import *
 
 class my_k_means(k_means):
     @staticmethod
-    def create_clever_centers(data, k, max_center_value):
+    def create_clever_centers(data, k):
         dim = len(data[0])
 
         center = [[0 for i in range(dim)]]
         label = [[] for i in range(k)]
 
+# Неслучайный выбор центров
+# Первый центр я попробовал 1)выбрать случайно,2)взять среднее по всем точкам,3)взять случайную точку за 1 центр
+# Потом выбираем самую далёкую точку - это вторая центроида
+# Затем откаждой точки строимся к каждой существующей центроиде и выбираем минимальное расстояние
+# из полученных минимумов выбираем максимум -> новая центроида
+
+        # center[0] = data[random.randint(0, len(data))]
+
+        # center[0] = data[random.randint(0, 1000000)]
+
+        # for i in range(dim):
+        #    center[0][i] = random.randint(0, 1000000)
+
         for i in range(dim):
-            center[0][i] = random.randint(0, max_center_value)
+            sum = 0
+            for j in range(len(data)):
+                sum += data[j][i] / len(data)
+                center[0][i] = sum
 
         for i in range(1, k):
             max_distance = -1
@@ -27,14 +43,16 @@ class my_k_means(k_means):
                     max_distance = min_distance
                     new_center = data[i]
             center.append(new_center)
+
+        # print(center)
         return center
 
     @staticmethod
-    def m_k_means(data, k, max_center_value, max_iterations):
+    def m_k_means(data, k, max_iterations):
         dim = len(data[0])
 
-        center = my_k_means.create_clever_centers(data, k, max_center_value)
-        #print(center)
+        center = my_k_means.create_clever_centers(data, k)
+        # print(center)
         label = [[] for i in range(k)]
 
         label = my_k_means.data_clusterization(data, center, k)
@@ -45,14 +63,14 @@ class my_k_means(k_means):
         while count < max_iterations:
             center = my_k_means.center_update(center, label, dim)
             label = my_k_means.data_clusterization(data, center, k)
-            #print(center)
+            # print(center)
             if center == privious_center:
-                #label = list(filter(None, label))
-                #print(center)
+                # label = list(filter(None, label))
+                # print(center)
                 break
             privious_center = copy.deepcopy(center)
             count += 1
-        #print(list(filter(None, label)))
-        #print(label)
+        # print(list(filter(None, label)))
+        # print(label)
         return label
 
