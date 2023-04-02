@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from k_means import *
 
 def visualisation_2d(label):
 	plt.grid()
